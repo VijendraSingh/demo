@@ -1,0 +1,34 @@
+2. Save Json Data Ws
+
+WS URL: http://localhost:8080/SampleDemo/ws/saveOrUpdateCustomer
+{
+"examInstanceData":{
+                    "23":{
+                    "customerId":456,
+                    "examInstanceId":23,
+                    "marks":76.87,
+                    "exam":{"23":{"sub_exam":{"11":"SSC CGL"}},
+                            "24":{"sub_exam":{"12":"SBI PO"}}},
+                    "rollNumber":"192882772977",
+                    "rank":788
+                        },
+                    "24":{
+                    "customerId":456,
+                    "examInstanceId":24,
+                    "exam":{"sub_exam":{"12":"SBI PO"},
+                            "sub_exam1":{"12":"SBI PO"}},
+                    "rollNumber":"192882772978",
+                    "marks":78.87
+                            }
+		}
+}
+
+
+2. GetCustomerData WS
+
+WS URL : http://localhost:8080/SampleDemo/ws/getCustomerData
+
+{
+    "customerId":456,
+    "exam":"23,24"
+}

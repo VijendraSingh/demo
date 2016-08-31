@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+     					  http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                          http://www.springframework.org/schema/context 
+                          http://www.springframework.org/schema/context/spring-context-4.0.xsd
+                          http://www.springframework.org/schema/tx 
+                          http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+                           http://www.springframework.org/schema/data/jpa 
+                           http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+	<!-- Enable auto wiring of spring beans - @Autowired annotation -->
+	<context:annotation-config />
+
+	<context:component-scan base-package="com.sample.*" />
+	<context:property-placeholder location="/WEB-INF/database.properties" />
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+	
+	<!-- 2 Integrate to Spring and Hibernate framework -->
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan" value="com.sample.model" />
+		<property name="hibernateProperties">
+			<value>
+				hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+				hibernate.hbm2ddl.auto=update
+				hibernate.connection.useUnicode=true
+				hibernate.connection.characterEncoding=UTF-8
+				hibernate.connection.charSet=UTF-8
+				hibernate.ejb.naming_strategy=org.hibernate.cfg.ImporvedNamingStrategy
+				hibernate.show_sql=true
+				hibernate.c3p0.min_size=5
+				hibernate.c3p0.max_size=10
+				hibernate.c3p0.timeout=300
+				hibernate.c3p0.max_statements=50
+				hibernate.c3p0.idle_test_period=3000
+			</value>
+		</property>
+	</bean>
+
+	<!-- 3 Provide Spring IOC Injections -->
+
+	<bean name="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+
+	<bean name="genericDAO" class="com.sample.dao.GenericDAOImpl">
+		<constructor-arg ref="sessionFactory" />
+	</bean>
+
+</beans>
